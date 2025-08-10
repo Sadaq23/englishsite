@@ -391,6 +391,127 @@
             font-weight: 500;
             font-size: 1.1rem;
         }
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-green), var(--medium-green));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .login-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46, 125, 50, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+        .login-header {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-header h2 {
+            color: var(--primary-green);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .login-header p {
+            color: var(--text-secondary);
+        }
+        .login-form {
+            position: relative;
+            z-index: 1;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-green), var(--medium-green));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 15px;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .login-error {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .remember-me input {
+            width: auto;
+        }
+        .forgot-password {
+            color: var(--primary-green);
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
         /* Hero Section */
         .hero {
             height: 100vh;
@@ -1290,6 +1411,35 @@
     </style>
 </head>
 <body>
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Owner Login</h2>
+                <p>Please enter your credentials to access the site</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div class="login-error" id="loginError">Invalid username or password</div>
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <!-- Preloader -->
     <div class="preloader" id="preloader">
         <div class="preloader-content">
@@ -1327,6 +1477,7 @@
                 <button class="lang-toggle" aria-label="Switch language">
                     <i class="fas fa-language"></i> EN
                 </button>
+                <button id="logoutBtn" class="btn btn-outline" style="display: none;">Logout</button>
             </div>
             <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
                 <i class="fas fa-bars"></i>
@@ -1624,18 +1775,122 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script>
+        // Login system
+        const loginOverlay = document.getElementById('loginOverlay');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const rememberMe = document.getElementById('rememberMe');
+        
+        // Owner credentials (in a real application, these should be stored securely)
+        const ownerCredentials = {
+            username: 'owner',
+            password: 'scader2025' // Change this to your desired password
+        };
+        
+        // Check if user is already logged in
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const rememberUntil = localStorage.getItem('rememberUntil');
+            
+            // Check if remember me token has expired
+            if (rememberUntil && new Date().getTime() > parseInt(rememberUntil)) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('rememberUntil');
+                return false;
+            }
+            
+            return isLoggedIn;
+        }
+        
+        // Show/hide login overlay based on login status
+        function updateLoginUI() {
+            const isLoggedIn = checkLoginStatus();
+            
+            if (isLoggedIn) {
+                // User is logged in, hide login overlay
+                loginOverlay.classList.add('hidden');
+                logoutBtn.style.display = 'block';
+            } else {
+                // User is not logged in, show login overlay
+                loginOverlay.classList.remove('hidden');
+                logoutBtn.style.display = 'none';
+            }
+        }
+        
+        // Handle login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple hash function for password (not secure for production)
+            function simpleHash(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32bit integer
+                }
+                return hash;
+            }
+            
+            // Check credentials
+            if (username === ownerCredentials.username && simpleHash(password) === simpleHash(ownerCredentials.password)) {
+                // Login successful
+                loginError.style.display = 'none';
+                
+                // Set login status
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Set remember me expiration (7 days from now)
+                if (rememberMe.checked) {
+                    const rememberUntil = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+                    localStorage.setItem('rememberUntil', rememberUntil.toString());
+                }
+                
+                // Update UI
+                updateLoginUI();
+                
+                // Show success notification
+                showNotification('Login successful! Welcome back.', 'success');
+            } else {
+                // Login failed
+                loginError.style.display = 'block';
+            }
+        });
+        
+        // Handle logout
+        logoutBtn.addEventListener('click', function() {
+            // Clear login status
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('rememberUntil');
+            
+            // Update UI
+            updateLoginUI();
+            
+            // Show notification
+            showNotification('You have been logged out.', 'success');
+        });
+        
+        // Initialize login status on page load
+        updateLoginUI();
+        
         // Preloader
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('hidden');
             }, 500);
         });
+        
         // Initialize AOS
         AOS.init({
             duration: 800,
             once: true,
             offset: 100
         });
+        
         // Initialize Swiper
         const swiper = new Swiper('.swiper', {
             loop: true,
@@ -1669,6 +1924,7 @@
             menuIcon.classList.toggle('fa-bars');
             menuIcon.classList.toggle('fa-times');
         });
+        
         // Close mobile menu when clicking on a link
         const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
         mobileMenuLinks.forEach(link => {
@@ -1678,6 +1934,7 @@
                 menuIcon.classList.remove('fa-times');
             });
         });
+        
         // Header Scroll Effect
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
@@ -1687,13 +1944,16 @@
                 header.classList.remove('scrolled');
             }
         });
+        
         // Theme Toggle
         const themeToggle = document.querySelector('.theme-toggle');
         const body = document.body;
+        
         // Check for saved theme preference or default to light
         const currentTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
+        
         themeToggle.addEventListener('click', () => {
             const currentTheme = body.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -1702,11 +1962,13 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         });
+        
         function updateThemeIcon(theme) {
             const icon = themeToggle.querySelector('i');
             icon.classList.toggle('fa-moon', theme === 'light');
             icon.classList.toggle('fa-sun', theme === 'dark');
         }
+        
         // Language Toggle
         const langToggle = document.querySelector('.lang-toggle');
         let currentLang = 'en';
@@ -1715,6 +1977,7 @@
             langToggle.innerHTML = `<i class="fas fa-language"></i> ${currentLang.toUpperCase()}`;
             // In a real application, you would implement actual language switching here
         });
+        
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1728,6 +1991,7 @@
                 }
             });
         });
+        
         // Animated Counter with easing
         function animateCounter(element, target, duration = 2000) {
             let start = 0;
@@ -1746,11 +2010,13 @@
                 }
             }, 16);
         }
+        
         // Intersection Observer for counters
         const observerOptions = {
             threshold: 0.5,
             rootMargin: '0px'
         };
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1761,10 +2027,12 @@
                 }
             });
         }, observerOptions);
+        
         // Observe all counters
         document.querySelectorAll('.stat-number').forEach(counter => {
             observer.observe(counter);
         });
+        
         // Form Submission with validation
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1811,6 +2079,7 @@
                 showNotification('An error occurred. Please try again.', 'error');
             });
         });
+        
         // Newsletter Form Submission
         document.getElementById('newsletterForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1853,6 +2122,7 @@
                 showNotification('An error occurred. Please try again.', 'error');
             });
         });
+        
         // Notification System
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
@@ -1883,6 +2153,7 @@
                 notification.classList.remove('show');
             }, 5000);
         }
+        
         // Interactive Service Cards
         const serviceCards = document.querySelectorAll('.service-card');
         serviceCards.forEach(card => {
@@ -1891,6 +2162,7 @@
                 showNotification(`Learn more about ${serviceName}`, 'success');
             });
         });
+        
         // Interactive Do Items
         const doItems = document.querySelectorAll('.do-item');
         doItems.forEach(item => {
@@ -1899,6 +2171,7 @@
                 showNotification(`Learn more about ${activityName}`, 'success');
             });
         });
+        
         // Interactive Contact Items
         const contactItems = document.querySelectorAll('.contact-item');
         contactItems.forEach(item => {
@@ -1907,6 +2180,7 @@
                 showNotification(`Contact via ${contactType}`, 'success');
             });
         });
+        
         // Interactive Map Marker
         const mapMarker = document.querySelector('.map-marker');
         if (mapMarker) {
@@ -1914,6 +2188,7 @@
                 showNotification('SCADER Headquarters, Mogadishu, Somalia', 'success');
             });
         }
+        
         // Interactive Testimonial Cards
         const testimonialCards = document.querySelectorAll('.testimonial-card');
         testimonialCards.forEach(card => {
@@ -1921,6 +2196,7 @@
                 showNotification('Read the full success story', 'success');
             });
         });
+        
         // Interactive Vision and Mission Boxes
         const visionBox = document.querySelector('.vision-box');
         const missionBox = document.querySelector('.mission-box');
@@ -1936,6 +2212,7 @@
                 showNotification('Our Mission: Creating a knowledge hub for sustainable resource management', 'success');
             });
         }
+        
         // Interactive About Image
         const aboutImage = document.querySelector('.about-image');
         if (aboutImage) {
@@ -1943,6 +2220,7 @@
                 showNotification('SCADER Team in Action', 'success');
             });
         }
+        
         // Interactive Services Grid
         const servicesGrid = document.querySelector('.services-grid');
         if (servicesGrid) {
@@ -1954,6 +2232,7 @@
                 }
             });
         }
+        
         // Interactive What We Do Grid
         const whatWeDoGrid = document.querySelector('.what-we-do-grid');
         if (whatWeDoGrid) {
@@ -1965,6 +2244,7 @@
                 }
             });
         }
+        
         // Interactive Contact Info
         const contactInfo = document.querySelector('.contact-info');
         if (contactInfo) {
@@ -1976,6 +2256,7 @@
                 }
             });
         }
+        
         // Interactive Footer
         const footer = document.querySelector('footer');
         if (footer) {
@@ -1988,6 +2269,7 @@
                 }
             });
         }
+        
         // Interactive Newsletter
         const newsletter = document.querySelector('.newsletter');
         if (newsletter) {
@@ -1998,6 +2280,7 @@
                 }
             });
         }
+        
         // Interactive Hero Content
         const heroContent = document.querySelector('.hero-content');
         if (heroContent) {
@@ -2007,6 +2290,7 @@
                 }
             });
         }
+        
         // Interactive Floating Elements
         const floatingElements = document.querySelectorAll('.floating-element');
         floatingElements.forEach(element => {
@@ -2014,6 +2298,7 @@
                 showNotification('Innovation in Agriculture', 'success');
             });
         });
+        
         // Interactive About Text
         const aboutText = document.querySelector('.about-text');
         if (aboutText) {
@@ -2025,6 +2310,7 @@
                 }
             });
         }
+        
         // Interactive Success Stories
         const successStories = document.querySelector('.success-stories');
         if (successStories) {
@@ -2034,6 +2320,7 @@
                 }
             });
         }
+        
         // Interactive Contact Form
         const contactForm = document.querySelector('.contact-form');
         if (contactForm) {
@@ -2043,6 +2330,7 @@
                 }
             });
         }
+        
         // Interactive Newsletter Form
         const newsletterForm = document.querySelector('.newsletter-form');
         if (newsletterForm) {
@@ -2052,6 +2340,7 @@
                 }
             });
         }
+        
         // Interactive Header
         const headerElement = document.querySelector('header');
         if (headerElement) {
@@ -2064,6 +2353,7 @@
                 }
             });
         }
+        
         // Interactive Mobile Menu
         const mobileMenuElement = document.querySelector('.mobile-menu');
         if (mobileMenuElement) {
@@ -2074,6 +2364,7 @@
                 }
             });
         }
+        
         // Interactive Theme Toggle
         const themeToggleElement = document.querySelector('.theme-toggle');
         if (themeToggleElement) {
@@ -2083,6 +2374,7 @@
                 showNotification(`Switched to ${newTheme} theme`, 'success');
             });
         }
+        
         // Interactive Language Toggle
         const langToggleElement = document.querySelector('.lang-toggle');
         if (langToggleElement) {
@@ -2091,6 +2383,7 @@
                 showNotification(`Language switched to ${currentLang}`, 'success');
             });
         }
+        
         // Interactive Preloader
         const preloaderElement = document.getElementById('preloader');
         if (preloaderElement) {
@@ -2098,6 +2391,7 @@
                 showNotification('Welcome to SCADER!', 'success');
             });
         }
+        
         // Interactive Notification
         const notificationElement = document.getElementById('notification');
         if (notificationElement) {
@@ -2105,6 +2399,7 @@
                 this.classList.remove('show');
             });
         }
+        
         // Interactive Swiper
         const swiperElement = document.querySelector('.swiper');
         if (swiperElement) {
@@ -2114,6 +2409,7 @@
                 }
             });
         }
+        
         // Interactive Map Container
         const mapContainerElement = document.querySelector('.map-container');
         if (mapContainerElement) {
@@ -2123,6 +2419,7 @@
                 }
             });
         }
+        
         // Interactive Service Links
         const serviceLinks = document.querySelectorAll('.service-link');
         serviceLinks.forEach(link => {
@@ -2132,6 +2429,7 @@
                 showNotification(`Learn more about ${serviceName}`, 'success');
             });
         });
+        
         // Interactive Footer Logo
         const footerLogo = document.querySelector('.footer-logo');
         if (footerLogo) {
@@ -2142,7 +2440,6 @@
                 });
             });
         }
-
         
         // Interactive Social Media Links
         const socialMediaLinks = document.querySelectorAll('.social-links a');
@@ -2153,6 +2450,7 @@
                 showNotification(`Follow us on ${platform}`, 'success');
             });
         });
+        
         // Interactive Footer Links
         const footerLinks = document.querySelectorAll('.footer-links a');
         footerLinks.forEach(link => {
@@ -2162,6 +2460,7 @@
                 showNotification(`Navigate to ${section} section`, 'success');
             });
         });
+        
         // Interactive Hero Section
         const heroSection = document.querySelector('.hero');
         if (heroSection) {
@@ -2171,6 +2470,7 @@
                 }
             });
         }
+        
         // Interactive About Section
         const aboutSection = document.querySelector('.about');
         if (aboutSection) {
@@ -2180,6 +2480,7 @@
                 }
             });
         }
+        
         // Interactive Services Section
         const servicesSection = document.querySelector('.services');
         if (servicesSection) {
@@ -2189,6 +2490,7 @@
                 }
             });
         }
+        
         // Interactive What We Do Section
         const whatWeDoSection = document.querySelector('.what-we-do');
         if (whatWeDoSection) {
@@ -2198,6 +2500,7 @@
                 }
             });
         }
+        
         // Interactive Mission & Vision Section
         const missionVisionSection = document.querySelector('.mission-vision');
         if (missionVisionSection) {
@@ -2207,6 +2510,7 @@
                 }
             });
         }
+        
         // Interactive Success Stories Section
         const successStoriesSection = document.querySelector('.success-stories');
         if (successStoriesSection) {
@@ -2216,6 +2520,7 @@
                 }
             });
         }
+        
         // Interactive Contact Section
         const contactSection = document.querySelector('.contact');
         if (contactSection) {
@@ -2225,6 +2530,7 @@
                 }
             });
         }
+        
         // Interactive Newsletter Section
         const newsletterSection = document.querySelector('.newsletter');
         if (newsletterSection) {
@@ -2234,6 +2540,7 @@
                 }
             });
         }
+        
         // Interactive Hero Buttons
         const heroButtons = document.querySelectorAll('.hero-buttons .btn');
         heroButtons.forEach(button => {
