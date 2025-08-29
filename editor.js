@@ -3,6 +3,62 @@ function clearStoredToken() {
     localStorage.removeItem('githubToken');
     console.log('Cleared stored GitHub token');
 }
+// Logo editing functionality
+document.querySelectorAll('img[data-id="logo-image"]').forEach(logo => {
+    logo.addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check file type
+            if (!file.type.match('image.*')) {
+                showNotification('Please select an image file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = event => {
+                // Create a temporary image to check dimensions
+                const tempImg = new Image();
+                tempImg.onload = function() {
+                    // Create a canvas to crop the image to square
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const size = Math.min(tempImg.width, tempImg.height);
+                    
+                    canvas.width = 40;
+                    canvas.height = 40;
+                    
+                    // Calculate crop coordinates (center crop)
+                    const sx = (tempImg.width - size) / 2;
+                    const sy = (tempImg.height - size) / 2;
+                    
+                    // Draw cropped image
+                    ctx.drawImage(tempImg, sx, sy, size, size, 0, 0, 40, 40);
+                    
+                    // Update all logos with the cropped image
+                    const croppedDataUrl = canvas.toDataURL('image/png');
+                    document.querySelectorAll('img[data-id="logo-image"]').forEach(l => {
+                        l.src = croppedDataUrl;
+                    });
+                    
+                    showNotification('Logo updated successfully!', 'success');
+                };
+                
+                tempImg.src = event.target.result;
+            };
+            
+            reader.readAsDataURL(file);
+        };
+        
+        input.click();
+    });
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     // Clear any stored token on page load to ensure fresh authentication
