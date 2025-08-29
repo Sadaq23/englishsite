@@ -2,7 +2,7 @@
   "global": {
     "siteTitle": "SCADER",
     "siteTagline": "Somali Centre For Agricultural Development & Resilience",
-    "footerCopyright": "\n                    © 2025 SCADER. All rights reserved.\n                "
+    "footerCopyright": "\n                    � 2025 SCADER. All rights reserved.\n                "
   },
   "navigation": {
     "home": "Home",
@@ -35,7 +35,7 @@
         "value": 15
       }
     ],
-    "imageUrl": "https://i.imgur.com/HOzaLJj.png"
+    "imageUrl": "https://i.imgur.com/hOw6Zt3.png"
   },
   "services": [
     {
