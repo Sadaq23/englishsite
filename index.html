@@ -1411,12 +1411,13 @@
     </style>
 </head>
 <body>
+<body>
     <!-- Login Overlay -->
-    <div class="login-overlay" id="loginOverlay">
+    <div class="login-overlay hidden" id="loginOverlay">
         <div class="login-container">
             <div class="login-header">
                 <h2>Owner Login</h2>
-                <p>Please enter your credentials to access the site</p>
+                <p>Please enter your credentials to access the admin area</p>
             </div>
             <form class="login-form" id="loginForm">
                 <div class="form-group">
@@ -1457,17 +1458,17 @@
                     <i class="fas fa-seedling"></i>
                 </div>
                 <div class="logo-text">
-                    <h2>SCADER</h2>
-                    <span>Somali Centre For Agricultural Development & Resilience</span>
+                    <h2 data-editable="true" data-id="site-title" data-type="text">SCADER</h2>
+                    <span data-editable="true" data-id="site-tagline" data-type="text">Somali Centre For Agricultural Development & Resilience</span>
                 </div>
             </div>
             <nav>
                 <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#what-we-do">What We Do</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#home" data-editable="true" data-id="nav-home" data-type="text">Home</a></li>
+                    <li><a href="#about" data-editable="true" data-id="nav-about" data-type="text">About Us</a></li>
+                    <li><a href="#services" data-editable="true" data-id="nav-services" data-type="text">Services</a></li>
+                    <li><a href="#what-we-do" data-editable="true" data-id="nav-whatwedo" data-type="text">What We Do</a></li>
+                    <li><a href="#contact" data-editable="true" data-id="nav-contact" data-type="text">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -1477,6 +1478,8 @@
                 <button class="lang-toggle" aria-label="Switch language">
                     <i class="fas fa-language"></i> EN
                 </button>
+                <button id="editBtn" class="btn" style="display: none;">Edit</button>
+                <button id="loginBtn" class="btn btn-outline">Admin Login</button>
                 <button id="logoutBtn" class="btn btn-outline" style="display: none;">Logout</button>
             </div>
             <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
@@ -1502,11 +1505,11 @@
             <div class="floating-element"><i class="fas fa-wheat-awn"></i></div>
         </div>
         <div class="hero-content">
-            <h1>Building Resilience in Somali Agriculture</h1>
-            <p>Empowering farmers through sustainable development, innovative solutions, and knowledge creation</p>
+            <h1 data-editable="true" data-id="hero-title" data-type="text">Building Resilience in Somali Agriculture</h1>
+            <p data-editable="true" data-id="hero-description" data-type="text">Empowering farmers through sustainable development, innovative solutions, and knowledge creation</p>
             <div class="hero-buttons">
-                <a href="#services" class="btn">Our Services</a>
-                <a href="#contact" class="btn btn-outline">Contact Us</a>
+                <a href="#services" class="btn" data-editable="true" data-id="hero-primary-button" data-type="text">Our Services</a>
+                <a href="#contact" class="btn btn-outline" data-editable="true" data-id="hero-secondary-button" data-type="text">Contact Us</a>
             </div>
         </div>
         <div class="hero-overlay"></div>
@@ -1516,26 +1519,26 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2>About SCADER</h2>
-                    <p>SCADER is dedicated to transforming agriculture in Somalia through innovation, education, and sustainable practices. Our team of experts works tirelessly to build resilience in the agricultural sector, creating opportunities for economic growth and food security.</p>
-                    <p>Since our establishment, we have trained over 5,000 farmers, implemented sustainable farming techniques across 10,000 hectares of land, and developed innovative solutions to address the unique challenges faced by Somali agriculture.</p>
+                    <h2 data-editable="true" data-id="about-title" data-type="text">About SCADER</h2>
+                    <p data-editable="true" data-id="about-description1" data-type="text">SCADER is dedicated to transforming agriculture in Somalia through innovation, education, and sustainable practices. Our team of experts works tirelessly to build resilience in the agricultural sector, creating opportunities for economic growth and food security.</p>
+                    <p data-editable="true" data-id="about-description2" data-type="text">Since our establishment, we have trained over 5,000 farmers, implemented sustainable farming techniques across 10,000 hectares of land, and developed innovative solutions to address the unique challenges faced by Somali agriculture.</p>
                     <div class="stats-container">
                         <div class="stat-item">
-                            <span class="stat-number" data-target="5000">0</span>
-                            <span class="stat-label">Farmers Trained</span>
+                            <span class="stat-number" data-editable="true" data-id="about-stat1-value" data-type="text" data-target="5000">0</span>
+                            <span class="stat-label" data-editable="true" data-id="about-stat1-label" data-type="text">Farmers Trained</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-target="10000">0</span>
-                            <span class="stat-label">Hectares Developed</span>
+                            <span class="stat-number" data-editable="true" data-id="about-stat2-value" data-type="text" data-target="10000">0</span>
+                            <span class="stat-label" data-editable="true" data-id="about-stat2-label" data-type="text">Hectares Developed</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number" data-target="15">0</span>
-                            <span class="stat-label">Years of Experience</span>
+                            <span class="stat-number" data-editable="true" data-id="about-stat3-value" data-type="text" data-target="15">0</span>
+                            <span class="stat-label" data-editable="true" data-id="about-stat3-label" data-type="text">Years of Experience</span>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="SCADER Team">
+                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="SCADER Team" data-editable="true" data-id="about-image" data-type="image">
                 </div>
             </div>
         </div>
@@ -1543,66 +1546,66 @@
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <h2 class="section-title">Our Services</h2>
+            <h2 class="section-title" data-editable="true" data-id="services-title" data-type="text">Our Services</h2>
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-tractor"></i>
+                        <i data-editable="true" data-id="service-0-icon" data-type="icon" class="fas fa-tractor"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Land Preparation</h3>
-                        <p>Professional land preparation services to optimize farming conditions and maximize crop yield.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-0-title" data-type="text">Land Preparation</h3>
+                        <p data-editable="true" data-id="service-0-description" data-type="text">Professional land preparation services to optimize farming conditions and maximize crop yield.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-0-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-flask"></i>
+                        <i data-editable="true" data-id="service-1-icon" data-type="icon" class="fas fa-flask"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Liquid Fertilizer</h3>
-                        <p>Advanced liquid fertilizer solutions to enhance soil fertility and promote healthy plant growth.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-1-title" data-type="text">Liquid Fertilizer</h3>
+                        <p data-editable="true" data-id="service-1-description" data-type="text">Advanced liquid fertilizer solutions to enhance soil fertility and promote healthy plant growth.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-1-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-shield-alt"></i>
+                        <i data-editable="true" data-id="service-2-icon" data-type="icon" class="fas fa-shield-alt"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Plant Protection</h3>
-                        <p>Comprehensive plant protection services to safeguard crops from pests and diseases.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-2-title" data-type="text">Plant Protection</h3>
+                        <p data-editable="true" data-id="service-2-description" data-type="text">Comprehensive plant protection services to safeguard crops from pests and diseases.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-2-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-helicopter"></i>
+                        <i data-editable="true" data-id="service-3-icon" data-type="icon" class="fas fa-helicopter"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Modern Farming</h3>
-                        <p>Utilizing modern technology including drones for efficient agricultural operations.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-3-title" data-type="text">Modern Farming</h3>
+                        <p data-editable="true" data-id="service-3-description" data-type="text">Utilizing modern technology including drones for efficient agricultural operations.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-3-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-harvest"></i>
+                        <i data-editable="true" data-id="service-4-icon" data-type="icon" class="fas fa-harvest"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Harvest Services</h3>
-                        <p>Professional harvesting services to ensure crops are collected efficiently and with minimal waste.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-4-title" data-type="text">Harvest Services</h3>
+                        <p data-editable="true" data-id="service-4-description" data-type="text">Professional harvesting services to ensure crops are collected efficiently and with minimal waste.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-4-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-graduation-cap"></i>
+                        <i data-editable="true" data-id="service-5-icon" data-type="icon" class="fas fa-graduation-cap"></i>
                     </div>
                     <div class="service-content">
-                        <h3>Training & Education</h3>
-                        <p>Technical training courses to build capacity and knowledge among local farmers.</p>
-                        <a href="#" class="service-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                        <h3 data-editable="true" data-id="service-5-title" data-type="text">Training & Education</h3>
+                        <p data-editable="true" data-id="service-5-description" data-type="text">Technical training courses to build capacity and knowledge among local farmers.</p>
+                        <a href="#" class="service-link" data-editable="true" data-id="service-5-link" data-type="text">Learn more <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -1611,35 +1614,35 @@
     <!-- What We Do Section -->
     <section id="what-we-do" class="what-we-do">
         <div class="container">
-            <h2 class="section-title">What We Do</h2>
+            <h2 class="section-title" data-editable="true" data-id="whatwedo-title" data-type="text">What We Do</h2>
             <div class="what-we-do-grid">
                 <div class="do-item">
                     <div class="do-icon">
-                        <i class="fas fa-shield-alt"></i>
+                        <i data-editable="true" data-id="activity-0-icon" data-type="icon" class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>Resilient Policies</h3>
-                    <p>Developing and implementing policies that strengthen agricultural resilience in the face of climate change and other challenges.</p>
+                    <h3 data-editable="true" data-id="activity-0-title" data-type="text">Resilient Policies</h3>
+                    <p data-editable="true" data-id="activity-0-description" data-type="text">Developing and implementing policies that strengthen agricultural resilience in the face of climate change and other challenges.</p>
                 </div>
                 <div class="do-item">
                     <div class="do-icon">
-                        <i class="fas fa-users"></i>
+                        <i data-editable="true" data-id="activity-1-icon" data-type="icon" class="fas fa-users"></i>
                     </div>
-                    <h3>Capacity Building</h3>
-                    <p>Building the capacity of farmers and agricultural stakeholders through training, resources, and support systems.</p>
+                    <h3 data-editable="true" data-id="activity-1-title" data-type="text">Capacity Building</h3>
+                    <p data-editable="true" data-id="activity-1-description" data-type="text">Building the capacity of farmers and agricultural stakeholders through training, resources, and support systems.</p>
                 </div>
                 <div class="do-item">
                     <div class="do-icon">
-                        <i class="fas fa-book"></i>
+                        <i data-editable="true" data-id="activity-2-icon" data-type="icon" class="fas fa-book"></i>
                     </div>
-                    <h3>Technical Training</h3>
-                    <p>Providing comprehensive technical training courses to enhance agricultural knowledge and skills.</p>
+                    <h3 data-editable="true" data-id="activity-2-title" data-type="text">Technical Training</h3>
+                    <p data-editable="true" data-id="activity-2-description" data-type="text">Providing comprehensive technical training courses to enhance agricultural knowledge and skills.</p>
                 </div>
                 <div class="do-item">
                     <div class="do-icon">
-                        <i class="fas fa-lightbulb"></i>
+                        <i data-editable="true" data-id="activity-3-icon" data-type="icon" class="fas fa-lightbulb"></i>
                     </div>
-                    <h3>Creative Solutions</h3>
-                    <p>Developing innovative approaches and solutions to address agricultural challenges in the Somali context.</p>
+                    <h3 data-editable="true" data-id="activity-3-title" data-type="text">Creative Solutions</h3>
+                    <p data-editable="true" data-id="activity-3-description" data-type="text">Developing innovative approaches and solutions to address agricultural challenges in the Somali context.</p>
                 </div>
             </div>
         </div>
@@ -1647,15 +1650,15 @@
     <!-- Mission & Vision Section -->
     <section id="mission-vision" class="mission-vision">
         <div class="container">
-            <h2 class="section-title">Our Mission & Vision</h2>
+            <h2 class="section-title" data-editable="true" data-id="missionvision-title" data-type="text">Our Mission & Vision</h2>
             <div class="mission-vision-grid">
                 <div class="vision-box">
-                    <h3>Our Vision</h3>
-                    <p>To build human capital that promotes economic and agricultural development in Somalia, creating a sustainable future for all.</p>
+                    <h3 data-editable="true" data-id="vision-title" data-type="text">Our Vision</h3>
+                    <p data-editable="true" data-id="vision-text" data-type="text">To build human capital that promotes economic and agricultural development in Somalia, creating a sustainable future for all.</p>
                 </div>
                 <div class="mission-box">
-                    <h3>Our Mission</h3>
-                    <p>To be a leading research and development organization that creates a knowledge hub for the sustainable management of marginal resources.</p>
+                    <h3 data-editable="true" data-id="mission-title" data-type="text">Our Mission</h3>
+                    <p data-editable="true" data-id="mission-text" data-type="text">To be a leading research and development organization that creates a knowledge hub for the sustainable management of marginal resources.</p>
                 </div>
             </div>
         </div>
@@ -1664,25 +1667,25 @@
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
-            <h2 class="section-title">Contact Us</h2>
+            <h2 class="section-title" data-editable="true" data-id="contact-title" data-type="text">Contact Us</h2>
             <div class="contact-grid">
                 <div class="contact-info">
-                    <h3>Get In Touch</h3>
+                    <h3 data-editable="true" data-id="contact-getintouch" data-type="text">Get In Touch</h3>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>123 Agricultural Street, Mogadishu, Somalia</span>
+                        <span data-editable="true" data-id="contact-address" data-type="text">123 Agricultural Street, Mogadishu, Somalia</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <a href="tel:+252151234567">+252 15 123 4567</a>
+                        <a href="tel:+252151234567" data-editable="true" data-id="contact-phone" data-type="text">+252 15 123 4567</a>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <a href="mailto:hello@reallygreatsite.com">hello@reallygreatsite.com</a>
+                        <a href="mailto:hello@reallygreatsite.com" data-editable="true" data-id="contact-email" data-type="text">hello@reallygreatsite.com</a>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-globe"></i>
-                        <a href="https://www.arcso.org/" target="_blank">www.arcso.org</a>
+                        <a href="https://www.arcso.org/" target="_blank" data-editable="true" data-id="contact-website" data-type="text">www.arcso.org</a>
                     </div>
                     <div class="map-container">
                         <div class="map-placeholder">
@@ -1690,24 +1693,24 @@
                             <div class="map-marker" style="top: 50%; left: 50%;"></div>
                         </div>
                     </div>
-                    <a href="https://www.arcso.org/" class="btn" target="_blank">Visit Our Website</a>
+                    <a href="https://www.arcso.org/" class="btn" target="_blank" data-editable="true" data-id="contact-website-button" data-type="text">Visit Our Website</a>
                 </div>
                 <div class="contact-form">
-                    <h3>Send us a Message</h3>
-                    <form id="contactForm" action="https://formspree.io/f/movlylqj" method="POST">
+                    <h3 data-editable="true" data-id="contact-sendmessage" data-type="text">Send us a Message</h3>
+                    <form id="contactForm">
                         <div class="form-group">
-                            <label for="name">Name</label>
+                            <label for="name" data-editable="true" data-id="contact-form-name-label" data-type="text">Name</label>
                             <input type="text" id="name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
+                            <label for="email" data-editable="true" data-id="contact-form-email-label" data-type="text">Email</label>
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="message">Message</label>
+                            <label for="message" data-editable="true" data-id="contact-form-message-label" data-type="text">Message</label>
                             <textarea id="message" name="message" required></textarea>
                         </div>
-                        <button type="submit" class="btn">Send Message</button>
+                        <button type="submit" class="btn" data-editable="true" data-id="contact-form-submit" data-type="text">Send Message</button>
                     </form>
                 </div>
             </div>
@@ -1717,12 +1720,12 @@
     <section class="newsletter">
         <div class="container">
             <div class="newsletter-content">
-                <h3>Stay Updated</h3>
-                <p>Subscribe to our newsletter for the latest news, updates, and insights from SCADER.</p>
-                <form id="newsletterForm" action="https://formspree.io/f/xqkzqjvq" method="POST">
+                <h3 data-editable="true" data-id="newsletter-title" data-type="text">Stay Updated</h3>
+                <p data-editable="true" data-id="newsletter-description" data-type="text">Subscribe to our newsletter for the latest news, updates, and insights from SCADER.</p>
+                <form id="newsletterForm">
                     <div class="newsletter-form-group">
-                        <input type="email" name="email" placeholder="Your email address" required>
-                        <button type="submit">Subscribe</button>
+                        <input type="email" name="email" placeholder="Your email address" data-editable="true" data-id="newsletter-placeholder" data-type="text" required>
+                        <button type="submit" data-editable="true" data-id="newsletter-button" data-type="text">Subscribe</button>
                     </div>
                 </form>
             </div>
@@ -1737,16 +1740,16 @@
                         <i class="fas fa-seedling"></i>
                     </div>
                     <div class="logo-text">
-                        <h2>SCADER</h2>
-                        <span>Somali Centre For Agricultural Development & Resilience</span>
+                        <h2 data-editable="true" data-id="footer-title" data-type="text">SCADER</h2>
+                        <span data-editable="true" data-id="footer-tagline" data-type="text">Somali Centre For Agricultural Development & Resilience</span>
                     </div>
                 </div>
                 <div class="footer-links">
-                    <a href="#home">Home</a>
-                    <a href="#about">About Us</a>
-                    <a href="#services">Services</a>
-                    <a href="#what-we-do">What We Do</a>
-                    <a href="#contact">Contact</a>
+                    <a href="#home" data-editable="true" data-id="footer-nav-home" data-type="text">Home</a>
+                    <a href="#about" data-editable="true" data-id="footer-nav-about" data-type="text">About Us</a>
+                    <a href="#services" data-editable="true" data-id="footer-nav-services" data-type="text">Services</a>
+                    <a href="#what-we-do" data-editable="true" data-id="footer-nav-whatwedo" data-type="text">What We Do</a>
+                    <a href="#contact" data-editable="true" data-id="footer-nav-contact" data-type="text">Contact</a>
                 </div>
                 <div class="social-links">
                     <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -1754,31 +1757,33 @@
                     <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
-                <div class="copyright">
+                <div class="copyright" data-editable="true" data-id="footer-copyright" data-type="text">
                     &copy; 2025 SCADER. All rights reserved.
                 </div>
             </div>
         </div>
     </footer>
-    <!-- Notification -->
+
+    <!-- Notification Element -->
     <div id="notification" class="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
         <div class="notification-content">
-            <div class="notification-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="notification-message">
-                <div class="notification-title">Success!</div>
-                <div class="notification-text">Your message has been sent successfully.</div>
-            </div>
+            <div class="notification-title">Success!</div>
+            <div class="notification-text">This is a notification message.</div>
+        </div>
+        <div class="notification-close">
+            <i class="fas fa-times"></i>
         </div>
     </div>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+
     <script>
         // Login system
         const loginOverlay = document.getElementById('loginOverlay');
         const loginForm = document.getElementById('loginForm');
         const loginError = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const rememberMe = document.getElementById('rememberMe');
         
@@ -1803,20 +1808,42 @@
             return isLoggedIn;
         }
         
-        // Show/hide login overlay based on login status
+        // Show/hide login button and logout button based on login status
         function updateLoginUI() {
             const isLoggedIn = checkLoginStatus();
             
             if (isLoggedIn) {
-                // User is logged in, hide login overlay
-                loginOverlay.classList.add('hidden');
+                // User is logged in, show logout button and hide login button
+                loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
+                
+                // Show edit button if logged in
+                const editBtn = document.getElementById('editBtn');
+                if (editBtn) {
+                    editBtn.style.display = 'block';
+                }
+                
+                // Load content if logged in and editor is available
+                if (typeof loadContent === 'function') {
+                    loadContent();
+                }
             } else {
-                // User is not logged in, show login overlay
-                loginOverlay.classList.remove('hidden');
+                // User is not logged in, show login button and hide logout button
+                loginBtn.style.display = 'block';
                 logoutBtn.style.display = 'none';
+                
+                // Hide edit button if not logged in
+                const editBtn = document.getElementById('editBtn');
+                if (editBtn) {
+                    editBtn.style.display = 'none';
+                }
             }
         }
+        
+        // Handle login button click
+        loginBtn.addEventListener('click', function() {
+            loginOverlay.classList.remove('hidden');
+        });
         
         // Handle login form submission
         loginForm.addEventListener('submit', function(e) {
@@ -1853,8 +1880,11 @@
                 // Update UI
                 updateLoginUI();
                 
+                // Hide login overlay
+                loginOverlay.classList.add('hidden');
+                
                 // Show success notification
-                showNotification('Login successful! Welcome back.', 'success');
+                showNotification('Login successful! Welcome to admin area.', 'success');
             } else {
                 // Login failed
                 loginError.style.display = 'block';
@@ -1882,37 +1912,6 @@
             setTimeout(() => {
                 document.getElementById('preloader').classList.add('hidden');
             }, 500);
-        });
-        
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 100
-        });
-        
-        // Initialize Swiper
-        const swiper = new Swiper('.swiper', {
-            loop: true,
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 1,
-                },
-                768: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
-            },
         });
         
         // Mobile Menu Toggle
@@ -2033,7 +2032,7 @@
             observer.observe(counter);
         });
         
-        // Form Submission with validation
+        // Form Submission with validation (without Formspree)
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -2055,32 +2054,14 @@
                 return;
             }
             
-            // Submit form using Formspree
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    // Success
-                    showNotification(`Thank you for your message, ${name}! We will get back to you soon.`, 'success');
-                    // Reset form
-                    this.reset();
-                } else {
-                    // Error
-                    response.json().then(data => {
-                        showNotification(`Error: ${data.message}`, 'error');
-                    });
-                }
-            }).catch(error => {
-                showNotification('An error occurred. Please try again.', 'error');
-            });
+            // Show success message (in a real app, you would send this to a server)
+            showNotification(`Thank you for your message, ${name}! We will get back to you soon.`, 'success');
+            
+            // Reset form
+            this.reset();
         });
         
-        // Newsletter Form Submission
+        // Newsletter Form Submission (without Formspree)
         document.getElementById('newsletterForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -2098,29 +2079,11 @@
                 return;
             }
             
-            // Submit form using Formspree
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    // Success
-                    showNotification('Thank you for subscribing to our newsletter!', 'success');
-                    // Reset form
-                    this.reset();
-                } else {
-                    // Error
-                    response.json().then(data => {
-                        showNotification(`Error: ${data.message}`, 'error');
-                    });
-                }
-            }).catch(error => {
-                showNotification('An error occurred. Please try again.', 'error');
-            });
+            // Show success message (in a real app, you would send this to a server)
+            showNotification('Thank you for subscribing to our newsletter!', 'success');
+            
+            // Reset form
+            this.reset();
         });
         
         // Notification System
@@ -2188,14 +2151,6 @@
                 showNotification('SCADER Headquarters, Mogadishu, Somalia', 'success');
             });
         }
-        
-        // Interactive Testimonial Cards
-        const testimonialCards = document.querySelectorAll('.testimonial-card');
-        testimonialCards.forEach(card => {
-            card.addEventListener('click', function() {
-                showNotification('Read the full success story', 'success');
-            });
-        });
         
         // Interactive Vision and Mission Boxes
         const visionBox = document.querySelector('.vision-box');
@@ -2311,36 +2266,6 @@
             });
         }
         
-        // Interactive Success Stories
-        const successStories = document.querySelector('.success-stories');
-        if (successStories) {
-            successStories.addEventListener('click', function(e) {
-                if (e.target.closest('.testimonial-card')) {
-                    showNotification('Read the full success story', 'success');
-                }
-            });
-        }
-        
-        // Interactive Contact Form
-        const contactForm = document.querySelector('.contact-form');
-        if (contactForm) {
-            contactForm.addEventListener('click', function(e) {
-                if (e.target.closest('form')) {
-                    showNotification('Fill out the form to get in touch', 'success');
-                }
-            });
-        }
-        
-        // Interactive Newsletter Form
-        const newsletterForm = document.querySelector('.newsletter-form');
-        if (newsletterForm) {
-            newsletterForm.addEventListener('click', function(e) {
-                if (e.target.closest('form')) {
-                    showNotification('Subscribe to our newsletter', 'success');
-                }
-            });
-        }
-        
         // Interactive Header
         const headerElement = document.querySelector('header');
         if (headerElement) {
@@ -2397,26 +2322,6 @@
         if (notificationElement) {
             notificationElement.addEventListener('click', function() {
                 this.classList.remove('show');
-            });
-        }
-        
-        // Interactive Swiper
-        const swiperElement = document.querySelector('.swiper');
-        if (swiperElement) {
-            swiperElement.addEventListener('click', function(e) {
-                if (e.target.closest('.swiper-slide')) {
-                    showNotification('Success story loaded', 'success');
-                }
-            });
-        }
-        
-        // Interactive Map Container
-        const mapContainerElement = document.querySelector('.map-container');
-        if (mapContainerElement) {
-            mapContainerElement.addEventListener('click', function(e) {
-                if (e.target.closest('.map-placeholder')) {
-                    showNotification('Our location in Mogadishu, Somalia', 'success');
-                }
             });
         }
         
@@ -2511,16 +2416,6 @@
             });
         }
         
-        // Interactive Success Stories Section
-        const successStoriesSection = document.querySelector('.success-stories');
-        if (successStoriesSection) {
-            successStoriesSection.addEventListener('click', function(e) {
-                if (e.target.closest('.testimonials-slider')) {
-                    showNotification('Read success stories', 'success');
-                }
-            });
-        }
-        
         // Interactive Contact Section
         const contactSection = document.querySelector('.contact');
         if (contactSection) {
@@ -2561,5 +2456,6 @@
             });
         });
     </script>
+    <script src="editor.js"></script>
 </body>
 </html>
