@@ -743,6 +743,14 @@ document.addEventListener('DOMContentLoaded', function() {
         window.pendingContent = content;
     }
     
+    // Helper function to encode string to base64 (handles Unicode)
+    function encodeBase64(str) {
+        // First escape the string to handle Unicode characters
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
+    }
+    
     // Proceed with commit after getting token
     function proceedWithCommit(content, githubToken) {
         const repo = 'Sadaq23/englishsite'; // Your repository
@@ -781,6 +789,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             const sha = data.sha;
             
+            // Properly encode content to base64 (handles Unicode characters)
+            const encodedContent = encodeBase64(content);
+            
             // Commit new content
             return fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
                 method: 'PUT',
@@ -790,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     message: 'Update site content via editor',
-                    content: btoa(content),
+                    content: encodedContent,
                     sha: sha
                 })
             });
