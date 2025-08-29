@@ -1,4 +1,13 @@
+// Clear stored token function
+function clearStoredToken() {
+    localStorage.removeItem('githubToken');
+    console.log('Cleared stored GitHub token');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Clear any stored token on page load to ensure fresh authentication
+    clearStoredToken();
+    
     // Check if user is logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
@@ -581,12 +590,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Save to localStorage as backup
         localStorage.setItem('siteContent', jsonContent);
         
-        // Commit to GitHub
-        commitToGitHub(jsonContent);
+        // Store content temporarily and show token modal
+        window.pendingContent = jsonContent;
+        showTokenModal();
     }
     
     // Show modal for entering GitHub token
     function showTokenModal() {
+        // Remove any existing modal
+        const existingModal = document.querySelector('.token-modal-backdrop');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
         // Create modal backdrop
         const modalBackdrop = document.createElement('div');
         modalBackdrop.className = 'token-modal-backdrop';
@@ -684,9 +700,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (token) {
                 localStorage.setItem('githubToken', token);
                 document.body.removeChild(modalBackdrop);
-                showNotification('Token saved successfully!', 'success');
-                // Get the content to save and proceed with commit
-                const content = localStorage.getItem('siteContent');
+                showNotification('Token saved successfully! Saving your changes...', 'success');
+                
+                // Get the pending content and proceed with commit
+                const content = window.pendingContent;
                 if (content) {
                     proceedWithCommit(content, token);
                 }
@@ -717,127 +734,111 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
     
-    // Proceed with commit after getting token
-function proceedWithCommit(content, githubToken) {
-    const repo = 'Sadaq23/englishsite'; // Your repository
-    const filePath = 'content.json';
-    
-    showNotification('Saving changes to GitHub...', 'success');
-    
-    // Get current file SHA
-    fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-        headers: {
-            'Authorization': `token ${githubToken}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            // If we get a 401 Unauthorized or 403 Forbidden, clear the token and show modal
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('githubToken');
-                showNotification('Your GitHub token is invalid or has expired. Please enter it again.', 'error');
-                setTimeout(() => {
-                    showTokenModal();
-                }, 2000);
-                throw new Error('Invalid token');
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        const sha = data.sha;
+    // Commit changes to GitHub
+    function commitToGitHub(content) {
+        // Always show the token modal for now to ensure we have a fresh token
+        showTokenModal();
         
-        // Commit new content
-        fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-            method: 'PUT',
+        // Store the content temporarily so we can access it after token entry
+        window.pendingContent = content;
+    }
+    
+    // Proceed with commit after getting token
+    function proceedWithCommit(content, githubToken) {
+        const repo = 'Sadaq23/englishsite'; // Your repository
+        const filePath = 'content.json';
+        
+        showNotification('Saving changes to GitHub...', 'success');
+        
+        // First, let's test the token by getting user info
+        fetch('https://api.github.com/user', {
             headers: {
-                'Authorization': `token ${githubToken}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: 'Update site content',
-                content: btoa(content),
-                sha: sha
-            })
+                'Authorization': `token ${githubToken}`
+            }
         })
         .then(response => {
             if (!response.ok) {
-                // If we get a 401 Unauthorized or 403 Forbidden, clear the token and show modal
-                if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem('githubToken');
-                    showNotification('Your GitHub token is invalid or has expired. Please enter it again.', 'error');
-                    setTimeout(() => {
-                        showTokenModal();
-                    }, 2000);
-                    throw new Error('Invalid token');
+                throw new Error(`Token validation failed: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(userData => {
+            console.log('Token valid for user:', userData.login);
+            
+            // Now get the file SHA
+            return fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+                headers: {
+                    'Authorization': `token ${githubToken}`
                 }
-                throw new Error(`HTTP error! status: ${response.status}`);
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to get file: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            if (data.commit) {
-                showNotification('Changes saved to GitHub! Netlify will deploy shortly.', 'success');
-                // Reload page after a short delay
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                showNotification('Error saving to GitHub: ' + (data.message || 'Unknown error'), 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error committing to GitHub:', error);
-            if (error.message !== 'Invalid token') {
-                showNotification('Error saving changes. Please check your GitHub token and repository access.', 'error');
-            }
-        });
-    })
-    .catch(error => {
-        console.error('Error getting file SHA:', error);
-        if (error.message !== 'Invalid token') {
-            showNotification('Error accessing GitHub repository. Please check your token and repository name.', 'error');
-        }
-    });
-}
-   
+            const sha = data.sha;
             
             // Commit new content
-            fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+            return fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `token ${githubToken}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    message: 'Update site content',
+                    message: 'Update site content via editor',
                     content: btoa(content),
                     sha: sha
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.commit) {
-                    showNotification('Changes saved to GitHub! Netlify will deploy shortly.', 'success');
-                    // Reload page after a short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    showNotification('Error saving to GitHub: ' + (data.message || 'Unknown error'), 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error committing to GitHub:', error);
-                showNotification('Error saving changes. Please check your GitHub token and repository access.', 'error');
             });
         })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to commit: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.commit) {
+                showNotification('Changes saved successfully! Reloading page...', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                throw new Error('No commit data returned');
+            }
+        })
         .catch(error => {
-            console.error('Error getting file SHA:', error);
-            showNotification('Error accessing GitHub repository. Please check your token and repository name.', 'error');
+            console.error('GitHub API Error:', error);
+            
+            // Clear invalid token
+            localStorage.removeItem('githubToken');
+            
+            // Show detailed error message
+            let errorMessage = 'Error saving to GitHub: ';
+            if (error.message.includes('401')) {
+                errorMessage += 'Unauthorized - Invalid token';
+            } else if (error.message.includes('403')) {
+                errorMessage += 'Forbidden - Check token permissions';
+            } else if (error.message.includes('404')) {
+                errorMessage += 'Not found - Check repository name';
+            } else {
+                errorMessage += error.message;
+            }
+            
+            showNotification(errorMessage, 'error');
+            
+            // Offer to retry with new token
+            setTimeout(() => {
+                if (confirm('Would you like to try again with a new token?')) {
+                    showTokenModal();
+                }
+            }, 3000);
         });
-    
+    }
     
     // Show notification function
     function showNotification(message, type = 'success') {
@@ -869,4 +870,4 @@ function proceedWithCommit(content, githubToken) {
             notification.classList.remove('show');
         }, 5000);
     }
-;
+});
